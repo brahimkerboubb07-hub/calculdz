@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>????? ????? ???????</title>
+<title>حاسبة العطل السنوية</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -310,7 +310,7 @@ input:focus{border-color:var(--pl);background:#fff;box-shadow:0 0 0 4px rgba(59,
 </head>
 <body>
 <div class="print-header" style="text-align:center;padding:10px 0 16px;border-bottom:3px solid #1d4ed8;margin-bottom:16px;">
-  <div style="font-size:18pt;font-weight:900;color:#1d4ed8;">????? ????? ???????</div>
+  <div style="font-size:18pt;font-weight:900;color:#1d4ed8;">حاسبة العطل السنوية</div>
   <div style="font-size:10pt;color:#64748b;" id="printDate"></div>
   <div style="font-size:9pt;color:#94a3b8;">kerboub brahim</div>
 </div>
@@ -318,8 +318,8 @@ input:focus{border-color:var(--pl);background:#fff;box-shadow:0 0 0 4px rgba(59,
 
   <div class="header">
     <div class="header-icon">&#127958;</div>
-    <h1>????? ????? ???????</h1>
-    <p>???? ?????? ??????? ??????? ????? ?? ????</p>
+    <h1>حاسبة العطل السنوية</h1>
+    <p>احسب العطلة والرصيد المتبقي لأكثر من موظف</p>
     <a href="https://www.facebook.com/brahim5kerboub" target="_blank" rel="noopener" class="wm-badge" style="text-decoration:none;">
       <div class="wm-dot"></div>
       <span class="wm-text">kerboub brahim</span>
@@ -330,45 +330,45 @@ input:focus{border-color:var(--pl);background:#fff;box-shadow:0 0 0 4px rgba(59,
 
   <div class="restore-bar" id="restoreBar">
     <span class="rb-icon">&#128190;</span>
-    <span class="rb-text" id="restoreText">?? ?????? ??? ?????? ??????</span>
-    <button class="rb-btn" onclick="restoreData()">&#128257; ???????</button>
-    <button class="rb-skip" onclick="dismissRestore()">?????</button>
+    <span class="rb-text" id="restoreText">تم العثور على بيانات محفوظة</span>
+    <button class="rb-btn" onclick="restoreData()">&#128257; استعادة</button>
+    <button class="rb-skip" onclick="dismissRestore()">تجاهل</button>
   </div>
 
-  <button class="add-btn" onclick="addPerson()">&#43; ????? ????</button>
+  <button class="add-btn" onclick="addPerson()">&#43; إضافة موظف</button>
   <div id="personsContainer"></div>
 
-  <button class="pdf-btn" id="pdfBtn" onclick="exportPDF()">&#128196; ????? ??? ????? (PDF)</button>
+  <button class="pdf-btn" id="pdfBtn" onclick="exportPDF()">&#128196; تصدير كشف العطل (PDF)</button>
 
   <div class="summary-bar" id="summaryBar">
-    <div class="summary-title">???? ???? ????????</div>
+    <div class="summary-title">ملخص جميع الموظفين</div>
     <div class="summary-grid" id="summaryGrid"></div>
   </div>
 
 </div>
 <script>
-var DAYS_AR    = ['?????','???????','????????','????????','??????','??????','?????'];
-var DAYS_SHORT = ['???','???','???','???','???','???','???'];
-var MONTHS_AR  = ['?????','?????','????','?????','???','????','??????','???','??????','??????','??????','??????'];
+var DAYS_AR    = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+var DAYS_SHORT = ['أحد','اثن','ثلا','أرب','خمس','جمع','سبت'];
+var MONTHS_AR  = ['جانفي','فيفري','مارس','أفريل','ماي','جوان','جويلية','أوت','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 var ANNUAL = 30;
 var personCount = 0;
 var openCalId = null;
 var STORAGE_KEY = 'conge_app_v2';
 
 var FIXED_HOL = {
-  '01-01':'??? ????? ?????????',
-  '05-01':'??? ??????',
-  '06-19':'???? ????? ?????????',
-  '07-05':'??? ?????????',
-  '11-01':'??? ?????? ?????????'
+  '01-01':'رأس السنة الميلادية',
+  '05-01':'عيد العمال',
+  '06-19':'ذكرى تأميم المحروقات',
+  '07-05':'عيد الاستقلال',
+  '11-01':'عيد الثورة التحريرية'
 };
 
 var HIJRI_HOL = {
-  2024:{'01-15':'???????','03-25':'?????? ??????','04-10':'??? ?????','04-11':'??? ????? 2','06-16':'??? ??????','06-17':'??? ?????? 2','07-07':'??? ????? ???????'},
-  2025:{'01-04':'???????','03-14':'?????? ??????','03-30':'??? ?????','03-31':'??? ????? 2','06-06':'??? ??????','06-07':'??? ?????? 2','06-26':'??? ????? ???????','12-25':'???????'},
-  2026:{'01-14':'???????','03-03':'?????? ??????','03-20':'??? ?????','03-21':'??? ????? 2','05-27':'??? ??????','05-28':'??? ?????? 2','06-16':'??? ????? ???????'},
-  2027:{'01-03':'???????','02-20':'?????? ??????','03-09':'??? ?????','03-10':'??? ????? 2','05-16':'??? ??????','05-17':'??? ?????? 2','06-05':'??? ????? ???????'},
-  2028:{'02-09':'?????? ??????','02-26':'??? ?????','02-27':'??? ????? 2','05-04':'??? ??????','05-05':'??? ?????? 2','05-24':'??? ????? ???????','12-23':'???????'}
+  2024:{'01-15':'عاشوراء','03-25':'المولد النبوي','04-10':'عيد الفطر','04-11':'عيد الفطر 2','06-16':'عيد الأضحى','06-17':'عيد الأضحى 2','07-07':'رأس السنة الهجرية'},
+  2025:{'01-04':'عاشوراء','03-14':'المولد النبوي','03-30':'عيد الفطر','03-31':'عيد الفطر 2','06-06':'عيد الأضحى','06-07':'عيد الأضحى 2','06-26':'رأس السنة الهجرية','12-25':'عاشوراء'},
+  2026:{'01-14':'عاشوراء','03-03':'المولد النبوي','03-20':'عيد الفطر','03-21':'عيد الفطر 2','05-27':'عيد الأضحى','05-28':'عيد الأضحى 2','06-16':'رأس السنة الهجرية'},
+  2027:{'01-03':'عاشوراء','02-20':'المولد النبوي','03-09':'عيد الفطر','03-10':'عيد الفطر 2','05-16':'عيد الأضحى','05-17':'عيد الأضحى 2','06-05':'رأس السنة الهجرية'},
+  2028:{'02-09':'المولد النبوي','02-26':'عيد الفطر','02-27':'عيد الفطر 2','05-04':'عيد الأضحى','05-05':'عيد الأضحى 2','05-24':'رأس السنة الهجرية','12-23':'عاشوراء'}
 };
 
 function getHolidayName(date) {
@@ -489,7 +489,7 @@ function buildCalendar(id, year, month) {
         var chosen = new Date(year, month, d);
         document.getElementById(id+'_startHidden').value = dateKey(chosen);
         var trigger = document.getElementById(id+'_trigger');
-        trigger.querySelector('.dt-val').textContent = fmt(chosen)+'  '+dayName(chosen);
+        trigger.querySelector('.dt-val').textContent = fmt(chosen)+' — '+dayName(chosen);
         trigger.querySelector('.dt-val').style.color = '';
         closeCalendar(id);
         saveAll();
@@ -502,7 +502,7 @@ function buildCalendar(id, year, month) {
 
   var leg = document.createElement('div');
   leg.className = 'hol-legend';
-  leg.innerHTML = '<div class="hol-item"><div class="hol-dot" style="background:#dc2626"></div> ???? ???????</div><div class="hol-item"><div class="hol-dot" style="background:#d97706"></div> ??? ????</div>';
+  leg.innerHTML = '<div class="hol-item"><div class="hol-dot" style="background:#dc2626"></div> عطلة أسبوعية</div><div class="hol-item"><div class="hol-dot" style="background:#d97706"></div> عيد رسمي</div>';
   popup.appendChild(leg);
 
   if(monthHolidays.length){
@@ -554,59 +554,59 @@ function addPerson() {
   div.innerHTML =
     '<div class="person-header">'+
       '<div class="person-num">'+num+'</div>'+
-      '<div class="person-title" id="'+id+'_title">???? '+num+'</div>'+
-      '<button class="remove-btn" onclick="removePerson(\''+id+'\')" title="???">&#10005;</button>'+
+      '<div class="person-title" id="'+id+'_title">موظف '+num+'</div>'+
+      '<button class="remove-btn" onclick="removePerson(\''+id+'\')" title="حذف">&#10005;</button>'+
     '</div>'+
     '<div class="form-grid">'+
       '<div class="field full">'+
-        '<label>??? ?????? (???????)</label>'+
-        '<input type="text" id="'+id+'_name" placeholder="????: ???? ?? ???" oninput="onNameInput(\''+id+'\',this.value)">'+
+        '<label>اسم الموظف (اختياري)</label>'+
+        '<input type="text" id="'+id+'_name" placeholder="مثال: محمد بن علي" oninput="onNameInput(\''+id+'\',this.value)">'+
       '</div>'+
     '</div>'+
-    '<div class="section-sep">&#128197; ?????? ???????</div>'+
+    '<div class="section-sep">&#128197; العطلة الحالية</div>'+
     '<div class="form-grid">'+
       '<div class="field">'+
-        '<label>????? ????? ?????? <span>*</span></label>'+
+        '<label>تاريخ بداية العطلة <span>*</span></label>'+
         '<input type="hidden" id="'+id+'_startHidden">'+
         '<div class="cal-wrap">'+
           '<div class="date-trigger" id="'+id+'_trigger" onclick="openCalendar(\''+id+'\');event.stopPropagation();">'+
-            '<span class="dt-val" style="color:#94a3b8;">???? ???????</span>'+
+            '<span class="dt-val" style="color:#94a3b8;">اختر التاريخ</span>'+
             '<span class="dt-ico">&#128197;</span>'+
           '</div>'+
           '<div class="cal-popup" id="'+id+'_cal" onclick="event.stopPropagation()"></div>'+
         '</div>'+
       '</div>'+
       '<div class="field">'+
-        '<label>??? ?????? (????) <span>*</span></label>'+
-        '<input type="number" id="'+id+'_dur" placeholder="????: 15" min="1" max="365" oninput="saveAll()">'+
+        '<label>مدة العطلة (أيام) <span>*</span></label>'+
+        '<input type="number" id="'+id+'_dur" placeholder="مثال: 15" min="1" max="365" oninput="saveAll()">'+
       '</div>'+
     '</div>'+
-    '<div class="section-sep">&#128194; ???? ??????? ???????</div>'+
+    '<div class="section-sep">&#128194; رصيد السنوات الماضية</div>'+
     '<div class="form-grid">'+
       '<div class="field full">'+
-        '<label>???? ?????? ?? ??????? ???????</label>'+
+        '<label>أيام متبقية من السنوات الماضية</label>'+
         '<input type="number" id="'+id+'_prev" placeholder="0" min="0" max="180" value="0" oninput="saveAll()">'+
-        '<span class="hint">???? ??? ???? ????? ??????? (30 + ??? ??????)</span>'+
+        '<span class="hint">تضاف إلى رصيد السنة الحالية (30 + هذه الأيام)</span>'+
       '</div>'+
     '</div>'+
-    '<button class="calc-btn" onclick="calculate(\''+id+'\')">&#128290; ????</button>'+
+    '<button class="calc-btn" onclick="calculate(\''+id+'\')">&#128290; احسب</button>'+
     '<div class="error-msg" id="'+id+'_err"></div>'+
     '<div class="result-panel" id="'+id+'_result">'+
       '<div class="rg">'+
-        '<div class="ri"><div class="ri-lbl">&#128197; ????? ??????</div><div class="ri-val" id="'+id+'_r_start"></div><div class="ri-sub" id="'+id+'_r_start_d"></div></div>'+
-        '<div class="ri hl"><div class="ri-lbl">&#127937; ??? ??? ????</div><div class="ri-val" id="'+id+'_r_end"></div><div class="ri-sub" id="'+id+'_r_end_d"></div></div>'+
-        '<div class="ri hl full"><div class="ri-lbl">&#127970; ????? ?????? ?????</div><div class="ri-val" id="'+id+'_r_ret"></div><div class="ri-sub" id="'+id+'_r_ret_d"></div></div>'+
+        '<div class="ri"><div class="ri-lbl">&#128197; بداية العطلة</div><div class="ri-val" id="'+id+'_r_start">—</div><div class="ri-sub" id="'+id+'_r_start_d">—</div></div>'+
+        '<div class="ri hl"><div class="ri-lbl">&#127937; آخر يوم عطلة</div><div class="ri-val" id="'+id+'_r_end">—</div><div class="ri-sub" id="'+id+'_r_end_d">—</div></div>'+
+        '<div class="ri hl full"><div class="ri-lbl">&#127970; تاريخ العودة للعمل</div><div class="ri-val" id="'+id+'_r_ret">—</div><div class="ri-sub" id="'+id+'_r_ret_d">—</div></div>'+
       '</div>'+
       '<div class="balance-block">'+
-        '<div class="balance-title">&#128202; ???? ??????</div>'+
+        '<div class="balance-title">&#128202; ملخص الرصيد</div>'+
         '<div class="balance-grid">'+
-          '<div class="bi"><div class="bi-num" id="'+id+'_b_avail"></div><div class="bi-lbl">?????? ??????</div></div>'+
-          '<div class="bi"><div class="bi-num warn" id="'+id+'_b_dur"></div><div class="bi-lbl">???? ??????</div></div>'+
-          '<div class="bi"><div class="bi-num" id="'+id+'_b_rem"></div><div class="bi-lbl">???????</div></div>'+
+          '<div class="bi"><div class="bi-num" id="'+id+'_b_avail">—</div><div class="bi-lbl">إجمالي الرصيد</div></div>'+
+          '<div class="bi"><div class="bi-num warn" id="'+id+'_b_dur">—</div><div class="bi-lbl">أيام العطلة</div></div>'+
+          '<div class="bi"><div class="bi-num" id="'+id+'_b_rem">—</div><div class="bi-lbl">المتبقي</div></div>'+
         '</div>'+
       '</div>'+
       '<div class="progress-section">'+
-        '<div class="progress-label"><span>???? ?????????</span><span id="'+id+'_pct">0%</span></div>'+
+        '<div class="progress-label"><span>نسبة الاستهلاك</span><span id="'+id+'_pct">0%</span></div>'+
         '<div class="progress-bar"><div class="progress-fill" id="'+id+'_fill"></div></div>'+
       '</div>'+
       '<div class="warn-box" id="'+id+'_warn" style="display:none;">'+
@@ -618,7 +618,7 @@ function addPerson() {
 }
 
 function onNameInput(id, val) {
-  document.getElementById(id+'_title').textContent = val || ('???? ' + id.replace('p',''));
+  document.getElementById(id+'_title').textContent = val || ('موظف ' + id.replace('p',''));
   saveAll();
 }
 
@@ -638,14 +638,14 @@ function calculate(id) {
   var resEl    = document.getElementById(id+'_result');
 
   if(!startVal || durVal < 1){
-    errEl.textContent = '?????? ?????? ????? ??????? ?????? ??? ??????';
+    errEl.textContent = 'الرجاء اختيار تاريخ البداية وإدخال مدة العطلة';
     errEl.classList.add('show');
     resEl.classList.remove('show');
     return;
   }
   var totalAvail = ANNUAL + prevRem;
   if(durVal > totalAvail){
-    errEl.textContent = '??? ?????? ('+durVal+' ???) ?????? ?????? ?????? ('+totalAvail+' ???)';
+    errEl.textContent = 'مدة العطلة ('+durVal+' يوم) تتجاوز الرصيد المتاح ('+totalAvail+' يوم)';
     errEl.classList.add('show');
     resEl.classList.remove('show');
     return;
@@ -684,12 +684,12 @@ function calculate(id) {
   var retWk  = isWeekend(returnDate);
   if(retWk || retHol){
     var reason = retWk
-      ? '??? '+dayName(returnDate)+' ??? ??? ???? ???????'
-      : '??? '+dayName(returnDate)+' ??? ??? ???? ('+retHol+')';
-    warns.push('????? ?????? ?????? ('+fmt(returnDate)+') ???? '+reason+'  ??? ??? ??? ????: '+dayName(actualReturn)+' '+fmt(actualReturn)+'.');
+      ? 'يوم '+dayName(returnDate)+' وهو يوم عطلة أسبوعية'
+      : 'يوم '+dayName(returnDate)+' وهو عيد رسمي ('+retHol+')';
+    warns.push('تاريخ العودة المحدد ('+fmt(returnDate)+') وافق '+reason+' — أول يوم عمل فعلي: '+dayName(actualReturn)+' '+fmt(actualReturn)+'.');
   }
-  if(finalRem >= 0 && finalRem <= 5) warns.push('?????: ?? ???? ??? '+finalRem+' ??? ?? ??????.');
-  if(prevRem > 0) warns.push('?? ?????? '+prevRem+' ??? ?????? ?? ??????? ??????? ??? ?????? ('+totalAvail+' ???).');
+  if(finalRem >= 0 && finalRem <= 5) warns.push('تنبيه: لم يتبق سوى '+finalRem+' يوم من الرصيد.');
+  if(prevRem > 0) warns.push('تم احتساب '+prevRem+' يوم مرحّلة من السنوات الماضية ضمن الرصيد ('+totalAvail+' يوم).');
 
   var holsInRange = [];
   for(var i=0; i<durVal; i++){
@@ -697,7 +697,7 @@ function calculate(id) {
     var h = getHolidayName(d);
     if(h && !isWeekend(d)) holsInRange.push(fmt(d)+' ('+h+')');
   }
-  if(holsInRange.length) warns.push('????? ????? ???? ??????: '+holsInRange.join(' | ')+'.');
+  if(holsInRange.length) warns.push('أعياد رسمية خلال العطلة: '+holsInRange.join(' | ')+'.');
 
   var warnBox = document.getElementById(id+'_warn');
   if(warns.length){
@@ -714,7 +714,7 @@ function calculate(id) {
   setTimeout(function(){ fill.style.width = pct+'%'; }, 120);
 
   saveAll();
-  showToast('&#128190; ?? ????? ????????', 'blue');
+  showToast('&#128190; تم الحفظ تلقائياً', 'blue');
   updateSummary();
 }
 
@@ -736,7 +736,7 @@ function updateSummary() {
   bar.classList.add('show');
   grid.innerHTML = results.map(function(r){
     var cls = r.remain < 0 ? 'over' : r.remain <= 5 ? 'low' : 'ok';
-    return '<div class="sum-item"><div class="sum-name">'+r.name+'</div><div class="sum-remain '+cls+'">'+r.remain+'</div><div class="sum-lbl">??? ?????</div></div>';
+    return '<div class="sum-item"><div class="sum-name">'+r.name+'</div><div class="sum-remain '+cls+'">'+r.remain+'</div><div class="sum-lbl">يوم متبقٍ</div></div>';
   }).join('');
 }
 
@@ -765,9 +765,9 @@ function loadSaved() {
     var saved = JSON.parse(raw);
     if(!saved || !saved.persons || !saved.persons.length) return;
     var mins = Math.round((Date.now() - saved.savedAt) / 60000);
-    var timeLabel = mins < 60 ? '??? '+mins+' ?????' : '??? '+Math.round(mins/60)+' ????';
+    var timeLabel = mins < 60 ? 'منذ '+mins+' دقيقة' : 'منذ '+Math.round(mins/60)+' ساعة';
     var bar = document.getElementById('restoreBar');
-    document.getElementById('restoreText').textContent = '?? ?????? ??? '+saved.persons.length+' ???? ????? ('+timeLabel+')';
+    document.getElementById('restoreText').textContent = 'تم العثور على '+saved.persons.length+' موظف محفوظ ('+timeLabel+')';
     bar.classList.add('show');
     bar._data = saved.persons;
   } catch(e) {}
@@ -789,7 +789,7 @@ function restoreData() {
       document.getElementById(id+'_startHidden').value = p.start;
       var d = new Date(p.start+'T00:00:00');
       var tv = document.getElementById(id+'_trigger').querySelector('.dt-val');
-      tv.textContent = fmt(d)+'  '+dayName(d);
+      tv.textContent = fmt(d)+' — '+dayName(d);
       tv.style.color = '';
     }
     if(p.dur)  document.getElementById(id+'_dur').value  = p.dur;
@@ -797,7 +797,7 @@ function restoreData() {
     if(p.hasResult){ (function(pid){ setTimeout(function(){ calculate(pid); }, 150); })(id); }
   });
   bar.classList.remove('show');
-  showToast('&#10003; ?? ??????? ????????', 'green');
+  showToast('&#10003; تم استعادة البيانات', 'green');
 }
 
 function dismissRestore() {
@@ -826,7 +826,7 @@ function exportPDF() {
       warns:  (document.getElementById(id+'_warn_txt')||{innerHTML:''}).innerHTML.replace(/<br>/g,' | ')
     });
   });
-  if(!results.length){ showToast('&#9888; ?? ???? ????? ???????'); return; }
+  if(!results.length){ showToast('&#9888; لا توجد نتائج للتصدير'); return; }
 
   var today = new Date();
   var todayStr = fmt(today);
@@ -859,8 +859,8 @@ function exportPDF() {
   html += '.footer{text-align:center;font-size:9pt;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px;margin-top:16px;}';
   html += '@media print{body{padding:10px;}}';
   html += '</style></head><body>';
-  html += '<div class="head"><h1>????? ????? ???????</h1>';
-  html += '<p>??? ????? ??????  '+todayStr+'</p>';
+  html += '<div class="head"><h1>حاسبة العطل السنوية</h1>';
+  html += '<p>كشف العطل الرسمي — '+todayStr+'</p>';
   html += '<p style="color:#94a3b8;">kerboub brahim</p></div>';
 
   for(var i=0;i<results.length;i++){
@@ -870,14 +870,14 @@ function exportPDF() {
     html+='<div class="card-head">'+(i+1)+'. '+r.name+'</div>';
     html+='<div class="card-body">';
     html+='<table>';
-    html+='<tr><td class="lbl">????? ??????</td><td class="val">'+r.start+'  '+r.startD+'</td></tr>';
-    html+='<tr class="bg"><td class="lbl">??? ??? ????</td><td class="val">'+r.end+'  '+r.endD+'</td></tr>';
-    html+='<tr><td class="lbl">????? ??????</td><td class="val" style="color:#1d4ed8;">'+r.ret+'  '+r.retD+'</td></tr>';
+    html+='<tr><td class="lbl">بداية العطلة</td><td class="val">'+r.start+' — '+r.startD+'</td></tr>';
+    html+='<tr class="bg"><td class="lbl">آخر يوم عطلة</td><td class="val">'+r.end+' — '+r.endD+'</td></tr>';
+    html+='<tr><td class="lbl">تاريخ العودة</td><td class="val" style="color:#1d4ed8;">'+r.ret+' — '+r.retD+'</td></tr>';
     html+='</table>';
     html+='<div class="boxes">';
-    html+='<div class="box b1"><div class="num">'+r.avail+'</div><div class="lbl2">?????? ??????</div></div>';
-    html+='<div class="box b2"><div class="num">'+r.dur+'</div><div class="lbl2">???? ??????</div></div>';
-    html+='<div class="box b3"><div class="num" style="color:'+remC+';">'+r.remain+'</div><div class="lbl2">???????</div></div>';
+    html+='<div class="box b1"><div class="num">'+r.avail+'</div><div class="lbl2">إجمالي الرصيد</div></div>';
+    html+='<div class="box b2"><div class="num">'+r.dur+'</div><div class="lbl2">أيام العطلة</div></div>';
+    html+='<div class="box b3"><div class="num" style="color:'+remC+';">'+r.remain+'</div><div class="lbl2">المتبقي</div></div>';
     html+='</div>';
     if(r.warns) html+='<div class="warn-box">&#9888; '+r.warns+'</div>';
     html+='</div></div>';
@@ -885,22 +885,22 @@ function exportPDF() {
 
   if(results.length>1){
     html+='<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-top:10px;">';
-    html+='<div style="background:#f8fafc;padding:10px 14px;font-weight:900;font-size:12pt;border-bottom:1px solid #e2e8f0;">???? ???? ????????</div>';
-    html+='<table class="sum-table"><tr><th>??????</th><th style="text-align:center;">????? ??????</th><th style="text-align:center;">?????</th><th style="text-align:center;">???????</th></tr>';
+    html+='<div style="background:#f8fafc;padding:10px 14px;font-weight:900;font-size:12pt;border-bottom:1px solid #e2e8f0;">ملخص جميع الموظفين</div>';
+    html+='<table class="sum-table"><tr><th>الموظف</th><th style="text-align:center;">بداية العطلة</th><th style="text-align:center;">المدة</th><th style="text-align:center;">المتبقي</th></tr>';
     for(var j=0;j<results.length;j++){
       var rj=results[j];
       var rc=parseInt(rj.remain)<0?'#ef4444':parseInt(rj.remain)<=5?'#f59e0b':'#10b981';
       html+='<tr style="'+(j%2?'background:#f8fafc':'')+'">';
       html+='<td style="font-weight:700;">'+rj.name+'</td>';
       html+='<td style="text-align:center;">'+rj.start+'</td>';
-      html+='<td style="text-align:center;">'+rj.dur+' ???</td>';
+      html+='<td style="text-align:center;">'+rj.dur+' يوم</td>';
       html+='<td style="text-align:center;font-weight:900;color:'+rc+';">'+rj.remain+'</td>';
       html+='</tr>';
     }
     html+='</table></div>';
   }
 
-  html+='<div class="footer">?? ????? ??? ????? ?????? ????? ????? ???????  kerboub brahim</div>';
+  html+='<div class="footer">تم إنشاء هذا الكشف بواسطة حاسبة العطل السنوية — kerboub brahim</div>';
   html+='<script>window.onload=function(){window.print();}<\/script>';
   html+='</body></html>';
 
@@ -917,7 +917,7 @@ function exportPDF() {
   setTimeout(function(){
     iframe.contentWindow.focus();
     iframe.contentWindow.print();
-    showToast('&#10003; ???? ??? ????? ??????? / ??? PDF','green');
+    showToast('&#10003; جاري فتح نافذة الطباعة / حفظ PDF','green');
   }, 600);
 }
 
