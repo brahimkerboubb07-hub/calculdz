@@ -489,7 +489,7 @@ function buildCalendar(id, year, month) {
         var chosen = new Date(year, month, d);
         document.getElementById(id+'_startHidden').value = dateKey(chosen);
         var trigger = document.getElementById(id+'_trigger');
-        trigger.querySelector('.dt-val').textContent = fmt(chosen)+' — '+dayName(chosen);
+        trigger.querySelector('.dt-val').textContent = fmt(chosen)+' Â— '+dayName(chosen);
         trigger.querySelector('.dt-val').style.color = '';
         closeCalendar(id);
         saveAll();
@@ -593,16 +593,16 @@ function addPerson() {
     '<div class="error-msg" id="'+id+'_err"></div>'+
     '<div class="result-panel" id="'+id+'_result">'+
       '<div class="rg">'+
-        '<div class="ri"><div class="ri-lbl">&#128197; ????? ??????</div><div class="ri-val" id="'+id+'_r_start">—</div><div class="ri-sub" id="'+id+'_r_start_d">—</div></div>'+
-        '<div class="ri hl"><div class="ri-lbl">&#127937; ??? ??? ????</div><div class="ri-val" id="'+id+'_r_end">—</div><div class="ri-sub" id="'+id+'_r_end_d">—</div></div>'+
-        '<div class="ri hl full"><div class="ri-lbl">&#127970; ????? ?????? ?????</div><div class="ri-val" id="'+id+'_r_ret">—</div><div class="ri-sub" id="'+id+'_r_ret_d">—</div></div>'+
+        '<div class="ri"><div class="ri-lbl">&#128197; ????? ??????</div><div class="ri-val" id="'+id+'_r_start">Â—</div><div class="ri-sub" id="'+id+'_r_start_d">Â—</div></div>'+
+        '<div class="ri hl"><div class="ri-lbl">&#127937; ??? ??? ????</div><div class="ri-val" id="'+id+'_r_end">Â—</div><div class="ri-sub" id="'+id+'_r_end_d">Â—</div></div>'+
+        '<div class="ri hl full"><div class="ri-lbl">&#127970; ????? ?????? ?????</div><div class="ri-val" id="'+id+'_r_ret">Â—</div><div class="ri-sub" id="'+id+'_r_ret_d">Â—</div></div>'+
       '</div>'+
       '<div class="balance-block">'+
         '<div class="balance-title">&#128202; ???? ??????</div>'+
         '<div class="balance-grid">'+
-          '<div class="bi"><div class="bi-num" id="'+id+'_b_avail">—</div><div class="bi-lbl">?????? ??????</div></div>'+
-          '<div class="bi"><div class="bi-num warn" id="'+id+'_b_dur">—</div><div class="bi-lbl">???? ??????</div></div>'+
-          '<div class="bi"><div class="bi-num" id="'+id+'_b_rem">—</div><div class="bi-lbl">???????</div></div>'+
+          '<div class="bi"><div class="bi-num" id="'+id+'_b_avail">Â—</div><div class="bi-lbl">?????? ??????</div></div>'+
+          '<div class="bi"><div class="bi-num warn" id="'+id+'_b_dur">Â—</div><div class="bi-lbl">???? ??????</div></div>'+
+          '<div class="bi"><div class="bi-num" id="'+id+'_b_rem">Â—</div><div class="bi-lbl">???????</div></div>'+
         '</div>'+
       '</div>'+
       '<div class="progress-section">'+
@@ -686,7 +686,7 @@ function calculate(id) {
     var reason = retWk
       ? '??? '+dayName(returnDate)+' ??? ??? ???? ???????'
       : '??? '+dayName(returnDate)+' ??? ??? ???? ('+retHol+')';
-    warns.push('????? ?????? ?????? ('+fmt(returnDate)+') ???? '+reason+' — ??? ??? ??? ????: '+dayName(actualReturn)+' '+fmt(actualReturn)+'.');
+    warns.push('????? ?????? ?????? ('+fmt(returnDate)+') ???? '+reason+' Â— ??? ??? ??? ????: '+dayName(actualReturn)+' '+fmt(actualReturn)+'.');
   }
   if(finalRem >= 0 && finalRem <= 5) warns.push('?????: ?? ???? ??? '+finalRem+' ??? ?? ??????.');
   if(prevRem > 0) warns.push('?? ?????? '+prevRem+' ??? ?????? ?? ??????? ??????? ??? ?????? ('+totalAvail+' ???).');
@@ -789,7 +789,7 @@ function restoreData() {
       document.getElementById(id+'_startHidden').value = p.start;
       var d = new Date(p.start+'T00:00:00');
       var tv = document.getElementById(id+'_trigger').querySelector('.dt-val');
-      tv.textContent = fmt(d)+' — '+dayName(d);
+      tv.textContent = fmt(d)+' Â— '+dayName(d);
       tv.style.color = '';
     }
     if(p.dur)  document.getElementById(id+'_dur').value  = p.dur;
@@ -860,7 +860,7 @@ function exportPDF() {
   html += '@media print{body{padding:10px;}}';
   html += '</style></head><body>';
   html += '<div class="head"><h1>????? ????? ???????</h1>';
-  html += '<p>??? ????? ?????? — '+todayStr+'</p>';
+  html += '<p>??? ????? ?????? Â— '+todayStr+'</p>';
   html += '<p style="color:#94a3b8;">kerboub brahim</p></div>';
 
   for(var i=0;i<results.length;i++){
@@ -870,9 +870,9 @@ function exportPDF() {
     html+='<div class="card-head">'+(i+1)+'. '+r.name+'</div>';
     html+='<div class="card-body">';
     html+='<table>';
-    html+='<tr><td class="lbl">????? ??????</td><td class="val">'+r.start+' — '+r.startD+'</td></tr>';
-    html+='<tr class="bg"><td class="lbl">??? ??? ????</td><td class="val">'+r.end+' — '+r.endD+'</td></tr>';
-    html+='<tr><td class="lbl">????? ??????</td><td class="val" style="color:#1d4ed8;">'+r.ret+' — '+r.retD+'</td></tr>';
+    html+='<tr><td class="lbl">????? ??????</td><td class="val">'+r.start+' Â— '+r.startD+'</td></tr>';
+    html+='<tr class="bg"><td class="lbl">??? ??? ????</td><td class="val">'+r.end+' Â— '+r.endD+'</td></tr>';
+    html+='<tr><td class="lbl">????? ??????</td><td class="val" style="color:#1d4ed8;">'+r.ret+' Â— '+r.retD+'</td></tr>';
     html+='</table>';
     html+='<div class="boxes">';
     html+='<div class="box b1"><div class="num">'+r.avail+'</div><div class="lbl2">?????? ??????</div></div>';
@@ -900,7 +900,7 @@ function exportPDF() {
     html+='</table></div>';
   }
 
-  html+='<div class="footer">?? ????? ??? ????? ?????? ????? ????? ??????? — kerboub brahim</div>';
+  html+='<div class="footer">?? ????? ??? ????? ?????? ????? ????? ??????? Â— kerboub brahim</div>';
   html+='<script>window.onload=function(){window.print();}<\/script>';
   html+='</body></html>';
 
