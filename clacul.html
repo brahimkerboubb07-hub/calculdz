@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>????? ????? ???????</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f4f8;--card:#fff;--primary:#1d4ed8;--pl:#3b82f6;
+  --accent:#0ea5e9;--success:#10b981;--warn:#f59e0b;--danger:#ef4444;
+  --text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --shadow:0 20px 60px rgba(29,78,216,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Cairo',sans-serif;background:var(--bg);
+  min-height:100vh;padding:24px;
+  background-image:
+    radial-gradient(circle at 20% 20%,rgba(29,78,216,.06) 0%,transparent 50%),
+    radial-gradient(circle at 80% 80%,rgba(14,165,233,.06) 0%,transparent 50%);
+}
+.page{max-width:800px;margin:0 auto;animation:rise .6s ease forwards;}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.header{text-align:center;margin-bottom:28px;}
+.header-icon{
+  width:62px;height:62px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  border-radius:18px;display:flex;align-items:center;justify-content:center;
+  font-size:26px;margin:0 auto 14px;box-shadow:0 8px 24px rgba(29,78,216,.3);
+}
+.header h1{font-family:'Tajawal',sans-serif;font-size:26px;font-weight:900;color:var(--text);margin-bottom:4px;}
+.header p{font-size:13px;color:var(--muted);margin-bottom:12px;}
+
+.wm-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 18px 7px 14px;
+  background:linear-gradient(135deg,rgba(29,78,216,.10),rgba(14,165,233,.13));
+  border:1.5px solid rgba(29,78,216,.18);border-radius:100px;
+}
+.wm-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(29,78,216,.15);}50%{box-shadow:0 0 0 6px rgba(29,78,216,.08);}}
+.wm-text{
+  font-family:'Tajawal',sans-serif;font-size:14px;font-weight:900;letter-spacing:1px;
+  color:#1d4ed8;-webkit-text-fill-color:#1d4ed8;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#1e293b;color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:600;
+  padding:10px 20px;border-radius:100px;box-shadow:0 8px 24px rgba(0,0,0,.25);
+  z-index:9999;opacity:0;transition:all .35s cubic-bezier(.175,.885,.32,1.275);
+  white-space:nowrap;display:flex;align-items:center;gap:8px;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.green{background:linear-gradient(135deg,#059669,#10b981);}
+.toast.blue{background:linear-gradient(135deg,#1d4ed8,#0ea5e9);}
+
+.restore-bar{
+  background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;
+  padding:12px 18px;margin-bottom:16px;display:none;
+  align-items:center;gap:10px;font-size:13px;color:#1d4ed8;font-weight:600;
+}
+.restore-bar.show{display:flex;}
+.restore-bar .rb-icon{font-size:18px;}
+.restore-bar .rb-text{flex:1;}
+.restore-bar .rb-btn{
+  background:var(--primary);color:#fff;border:none;border-radius:8px;
+  padding:6px 14px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;
+}
+.restore-bar .rb-skip{
+  background:none;border:none;color:var(--muted);font-family:'Cairo',sans-serif;
+  font-size:12px;font-weight:600;cursor:pointer;padding:6px 10px;
+}
+
+.add-btn{
+  display:flex;align-items:center;gap:10px;justify-content:center;
+  width:100%;padding:14px;margin-bottom:20px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;font-family:'Tajawal',sans-serif;font-size:16px;font-weight:900;
+  border:none;border-radius:14px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(29,78,216,.3);transition:transform .2s,box-shadow .2s;
+}
+.add-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(29,78,216,.4);}
+
+.pdf-btn{
+  display:flex;align-items:center;gap:10px;justify-content:center;
+  width:100%;padding:13px;margin-bottom:16px;
+  background:linear-gradient(135deg,#dc2626,#ef4444);
+  color:#fff;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:900;
+  border:none;border-radius:14px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(220,38,38,.3);transition:transform .2s,box-shadow .2s;
+}
+.pdf-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(220,38,38,.4);}
+.pdf-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+.person-card{
+  background:var(--card);border-radius:22px;padding:26px 28px;
+  box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:16px;
+}
+.person-card.has-result{border-color:rgba(29,78,216,.25);}
+.person-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.person-num{
+  width:34px;height:34px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Tajawal',sans-serif;font-size:15px;font-weight:900;color:#fff;
+}
+.person-title{font-family:'Tajawal',sans-serif;font-size:16px;font-weight:900;color:var(--text);flex:1;}
+.remove-btn{
+  background:none;border:none;cursor:pointer;color:var(--muted);
+  font-size:18px;padding:4px 8px;border-radius:8px;transition:background .2s,color .2s;
+}
+.remove-btn:hover{background:#fef2f2;color:var(--danger);}
+
+.section-sep{
+  display:flex;align-items:center;gap:10px;
+  margin:18px 0 14px;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;
+}
+.section-sep::before,.section-sep::after{content:'';flex:1;height:1px;background:var(--border);}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field.full{grid-column:1/-1;}
+label{font-size:12px;font-weight:700;color:var(--text);}
+label span{color:var(--danger);margin-right:2px;}
+input[type="number"],input[type="text"]{
+  font-family:'Cairo',sans-serif;font-size:14px;color:var(--text);
+  background:#f8fafc;border:2px solid var(--border);border-radius:11px;
+  padding:10px 13px;outline:none;width:100%;direction:rtl;
+  transition:border-color .25s,box-shadow .25s,background .25s;
+}
+input:focus{border-color:var(--pl);background:#fff;box-shadow:0 0 0 4px rgba(59,130,246,.1);}
+.hint{font-size:10px;color:var(--muted);margin-top:-3px;}
+
+.date-trigger{
+  font-family:'Cairo',sans-serif;font-size:14px;color:var(--text);
+  background:#f8fafc;border:2px solid var(--border);border-radius:11px;
+  padding:10px 13px;outline:none;width:100%;
+  cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+  transition:border-color .25s,box-shadow .25s;user-select:none;
+}
+.date-trigger:hover,.date-trigger.open{border-color:var(--pl);background:#fff;box-shadow:0 0 0 4px rgba(59,130,246,.1);}
+.date-trigger .dt-val{flex:1;}
+.date-trigger .dt-ico{font-size:16px;color:var(--muted);}
+
+.cal-wrap{position:relative;}
+.cal-popup{
+  position:absolute;top:calc(100% + 8px);right:0;left:0;z-index:999;
+  background:#fff;border:1px solid var(--border);border-radius:18px;
+  box-shadow:0 20px 60px rgba(0,0,0,.15);padding:16px;
+  display:none;min-width:300px;
+}
+.cal-popup.open{display:block;animation:calIn .2s ease forwards;}
+@keyframes calIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.cal-nav-btn{
+  background:none;border:none;cursor:pointer;
+  width:32px;height:32px;border-radius:8px;font-size:16px;color:var(--primary);
+  display:flex;align-items:center;justify-content:center;transition:background .2s;
+}
+.cal-nav-btn:hover{background:#eff6ff;}
+.cal-month-label{font-family:'Tajawal',sans-serif;font-size:15px;font-weight:900;color:var(--text);}
+
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-dow{text-align:center;font-size:10px;font-weight:700;color:var(--muted);padding:4px 0 6px;}
+.cal-day{
+  text-align:center;font-size:12px;font-weight:600;color:var(--text);
+  padding:6px 2px;border-radius:8px;cursor:pointer;
+  position:relative;transition:background .15s,color .15s;line-height:1.2;
+}
+.cal-day:hover{background:#eff6ff;color:var(--primary);}
+.cal-day.empty{cursor:default;pointer-events:none;}
+.cal-day.today{background:#eff6ff;color:var(--primary);font-weight:900;}
+.cal-day.selected{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;font-weight:900;}
+.cal-day.weekend{color:#dc2626;}
+.cal-day.selected.weekend{color:#fff;}
+.cal-day.holiday{background:#fef3c7;color:#92400e;font-weight:800;}
+.cal-day.holiday:hover{background:#fde68a;}
+.cal-day.selected.holiday{background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;}
+.cal-day.holiday::after{
+  content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:#d97706;
+}
+.cal-day.selected::after{background:#fff !important;}
+
+.hol-legend{
+  margin-top:10px;border-top:1px solid var(--border);padding-top:10px;
+  display:flex;flex-wrap:wrap;gap:6px;
+}
+.hol-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);}
+.hol-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+.month-holidays{margin-top:8px;display:flex;flex-direction:column;gap:4px;}
+.mh-item{
+  display:flex;align-items:center;gap:6px;font-size:11px;
+  background:#fffbeb;border:1px solid #fde68a;border-radius:8px;
+  padding:5px 8px;color:#92400e;font-weight:600;
+}
+.mh-item .mh-day{
+  font-family:'Tajawal',sans-serif;font-weight:900;
+  background:#f59e0b;color:#fff;border-radius:6px;
+  padding:2px 7px;font-size:12px;flex-shrink:0;
+}
+
+.calc-btn{
+  width:100%;padding:12px;margin-top:18px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:900;
+  border:none;border-radius:12px;cursor:pointer;
+  box-shadow:0 4px 16px rgba(29,78,216,.3);transition:transform .2s,box-shadow .2s;
+}
+.calc-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(29,78,216,.4);}
+
+.error-msg{
+  background:#fef2f2;border:1px solid #fecaca;border-radius:10px;
+  padding:10px 14px;color:var(--danger);font-size:12px;font-weight:600;
+  display:none;margin-top:10px;text-align:center;
+}
+.error-msg.show{display:block;}
+
+.result-panel{
+  margin-top:18px;
+  background:linear-gradient(135deg,#1d4ed8,#0284c7);
+  border-radius:18px;padding:22px 24px;display:none;
+}
+.result-panel.show{display:block;animation:popIn .4s cubic-bezier(.175,.885,.32,1.275) forwards;}
+@keyframes popIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.ri{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 14px;}
+.ri.hl{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.3);}
+.ri.full{grid-column:1/-1;}
+.ri-lbl{font-size:10px;color:rgba(255,255,255,.65);margin-bottom:4px;font-weight:700;}
+.ri-val{font-family:'Tajawal',sans-serif;font-size:18px;font-weight:900;color:#fff;line-height:1.2;}
+.ri-sub{font-size:10px;color:rgba(255,255,255,.6);margin-top:2px;}
+
+.balance-block{
+  margin-top:10px;background:rgba(16,185,129,.15);
+  border:1px solid rgba(16,185,129,.35);border-radius:14px;padding:14px 16px;
+}
+.balance-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.balance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.bi{text-align:center;}
+.bi-num{font-family:'Tajawal',sans-serif;font-size:24px;font-weight:900;color:#6ee7b7;line-height:1;}
+.bi-num.warn{color:#fcd34d;}
+.bi-num.bad{color:#fca5a5;}
+.bi-lbl{font-size:10px;color:rgba(255,255,255,.6);margin-top:3px;}
+
+.progress-section{background:rgba(255,255,255,.08);border-radius:12px;padding:12px 14px;margin-top:10px;}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.7);margin-bottom:8px;font-weight:600;}
+.progress-bar{height:7px;background:rgba(255,255,255,.15);border-radius:100px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:100px;width:0%;transition:width 1s ease;}
+.pf-green{background:linear-gradient(90deg,#34d399,#10b981);}
+.pf-yellow{background:linear-gradient(90deg,#fbbf24,#f59e0b);}
+.pf-red{background:linear-gradient(90deg,#f87171,#ef4444);}
+
+.warn-box{
+  background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.4);
+  border-radius:11px;padding:10px 14px;
+  display:flex;gap:8px;align-items:flex-start;margin-top:10px;
+}
+.wi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn-text{font-size:11px;color:rgba(255,255,255,.85);line-height:1.7;}
+
+.summary-bar{
+  background:var(--card);border-radius:18px;padding:20px 24px;
+  box-shadow:var(--shadow);border:1px solid var(--border);
+  margin-top:8px;display:none;
+}
+.summary-bar.show{display:block;}
+.summary-title{
+  font-family:'Tajawal',sans-serif;font-size:15px;font-weight:900;color:var(--text);
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.summary-title::before{content:'';display:block;width:4px;height:18px;background:linear-gradient(180deg,var(--primary),var(--accent));border-radius:4px;}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.sum-item{
+  background:#f8fafc;border:1px solid var(--border);border-radius:12px;
+  padding:12px 14px;display:flex;flex-direction:column;gap:4px;
+}
+.sum-name{font-size:12px;font-weight:700;color:var(--text);}
+.sum-remain{font-family:'Tajawal',sans-serif;font-size:20px;font-weight:900;}
+.sum-remain.ok{color:var(--success);}
+.sum-remain.low{color:var(--warn);}
+.sum-remain.over{color:var(--danger);}
+.sum-lbl{font-size:10px;color:var(--muted);}
+
+@media print {
+  body { background:#fff !important; padding:0 !important; }
+  .add-btn,.pdf-btn,.remove-btn,.calc-btn,.restore-bar,
+  .cal-popup,.wm-badge,.toast,.summary-bar { display:none !important; }
+  .page { max-width:100% !important; animation:none !important; }
+  .person-card { box-shadow:none !important; border:1px solid #e2e8f0 !important; margin-bottom:12px !important; break-inside:avoid; }
+  .result-panel { display:block !important; break-inside:avoid; }
+  .header-icon { display:none !important; }
+  .header h1 { color:#1d4ed8 !important; }
+  .section-sep { margin:10px 0 8px !important; }
+  .print-header { display:block !important; }
+}
+.print-header { display:none; }
+</style>
+</head>
+<body>
+<div class="print-header" style="text-align:center;padding:10px 0 16px;border-bottom:3px solid #1d4ed8;margin-bottom:16px;">
+  <div style="font-size:18pt;font-weight:900;color:#1d4ed8;">????? ????? ???????</div>
+  <div style="font-size:10pt;color:#64748b;" id="printDate"></div>
+  <div style="font-size:9pt;color:#94a3b8;">kerboub brahim</div>
+</div>
+<div class="page">
+
+  <div class="header">
+    <div class="header-icon">&#127958;</div>
+    <h1>????? ????? ???????</h1>
+    <p>???? ?????? ??????? ??????? ????? ?? ????</p>
+    <a href="https://www.facebook.com/brahim5kerboub" target="_blank" rel="noopener" class="wm-badge" style="text-decoration:none;">
+      <div class="wm-dot"></div>
+      <span class="wm-text">kerboub brahim</span>
+    </a>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="restore-bar" id="restoreBar">
+    <span class="rb-icon">&#128190;</span>
+    <span class="rb-text" id="restoreText">?? ?????? ??? ?????? ??????</span>
+    <button class="rb-btn" onclick="restoreData()">&#128257; ???????</button>
+    <button class="rb-skip" onclick="dismissRestore()">?????</button>
+  </div>
+
+  <button class="add-btn" onclick="addPerson()">&#43; ????? ????</button>
+  <div id="personsContainer"></div>
+
+  <button class="pdf-btn" id="pdfBtn" onclick="exportPDF()">&#128196; ????? ??? ????? (PDF)</button>
+
+  <div class="summary-bar" id="summaryBar">
+    <div class="summary-title">???? ???? ????????</div>
+    <div class="summary-grid" id="summaryGrid"></div>
+  </div>
+
+</div>
+<script>
+var DAYS_AR    = ['?????','???????','????????','????????','??????','??????','?????'];
+var DAYS_SHORT = ['???','???','???','???','???','???','???'];
+var MONTHS_AR  = ['?????','?????','????','?????','???','????','??????','???','??????','??????','??????','??????'];
+var ANNUAL = 30;
+var personCount = 0;
+var openCalId = null;
+var STORAGE_KEY = 'conge_app_v2';
+
+var FIXED_HOL = {
+  '01-01':'??? ????? ?????????',
+  '05-01':'??? ??????',
+  '06-19':'???? ????? ?????????',
+  '07-05':'??? ?????????',
+  '11-01':'??? ?????? ?????????'
+};
+
+var HIJRI_HOL = {
+  2024:{'01-15':'???????','03-25':'?????? ??????','04-10':'??? ?????','04-11':'??? ????? 2','06-16':'??? ??????','06-17':'??? ?????? 2','07-07':'??? ????? ???????'},
+  2025:{'01-04':'???????','03-14':'?????? ??????','03-30':'??? ?????','03-31':'??? ????? 2','06-06':'??? ??????','06-07':'??? ?????? 2','06-26':'??? ????? ???????','12-25':'???????'},
+  2026:{'01-14':'???????','03-03':'?????? ??????','03-20':'??? ?????','03-21':'??? ????? 2','05-27':'??? ??????','05-28':'??? ?????? 2','06-16':'??? ????? ???????'},
+  2027:{'01-03':'???????','02-20':'?????? ??????','03-09':'??? ?????','03-10':'??? ????? 2','05-16':'??? ??????','05-17':'??? ?????? 2','06-05':'??? ????? ???????'},
+  2028:{'02-09':'?????? ??????','02-26':'??? ?????','02-27':'??? ????? 2','05-04':'??? ??????','05-05':'??? ?????? 2','05-24':'??? ????? ???????','12-23':'???????'}
+};
+
+function getHolidayName(date) {
+  var mm = pad2(date.getMonth()+1);
+  var dd = pad2(date.getDate());
+  var y  = date.getFullYear();
+  var key = mm+'-'+dd;
+  if(FIXED_HOL[key]) return FIXED_HOL[key];
+  var yh = HIJRI_HOL[y] || {};
+  return yh[key] || null;
+}
+
+function isWeekend(d) { return d.getDay()===5 || d.getDay()===6; }
+function pad2(n) { return String(n).padStart(2,'0'); }
+function fmt(d) { return d.getDate()+' '+MONTHS_AR[d.getMonth()]+' '+d.getFullYear(); }
+function dayName(d) { return DAYS_AR[d.getDay()]; }
+function addD(d,n) { var r=new Date(d); r.setDate(r.getDate()+n); return r; }
+function dateKey(d) { return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+
+function nextDay(d) { return addD(d,1); }
+function actualReturnDay(d) {
+  var next = addD(d,1);
+  while(isWeekend(next) || getHolidayName(next)) next = addD(next,1);
+  return next;
+}
+
+// ---- TOAST ----
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.className = 'toast' + (type ? ' '+type : '');
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2800);
+}
+
+// ---- CALENDAR ----
+function buildCalendar(id, year, month) {
+  var popup = document.getElementById(id+'_cal');
+  popup.innerHTML = '';
+  var today = new Date();
+  var selVal = document.getElementById(id+'_startHidden').value;
+  var selectedDate = selVal ? new Date(selVal+'T00:00:00') : null;
+
+  var nav = document.createElement('div');
+  nav.className = 'cal-nav';
+
+  var prevBtn = document.createElement('button');
+  prevBtn.className = 'cal-nav-btn';
+  prevBtn.innerHTML = '&#8250;';
+  prevBtn.onclick = function(e){
+    e.stopPropagation();
+    var m=month-1, y=year;
+    if(m<0){m=11;y--;}
+    buildCalendar(id,y,m);
+  };
+
+  var nextBtn = document.createElement('button');
+  nextBtn.className = 'cal-nav-btn';
+  nextBtn.innerHTML = '&#8249;';
+  nextBtn.onclick = function(e){
+    e.stopPropagation();
+    var m=month+1, y=year;
+    if(m>11){m=0;y++;}
+    buildCalendar(id,y,m);
+  };
+
+  var lbl = document.createElement('div');
+  lbl.className = 'cal-month-label';
+  lbl.textContent = MONTHS_AR[month]+' '+year;
+
+  nav.appendChild(prevBtn);
+  nav.appendChild(lbl);
+  nav.appendChild(nextBtn);
+  popup.appendChild(nav);
+
+  var grid = document.createElement('div');
+  grid.className = 'cal-grid';
+
+  for(var di=0; di<7; di++){
+    var h = document.createElement('div');
+    h.className = 'cal-dow' + (di===5||di===6?' weekend':'');
+    h.textContent = DAYS_SHORT[di];
+    grid.appendChild(h);
+  }
+
+  var firstDay = new Date(year, month, 1).getDay();
+  var daysInMonth = new Date(year, month+1, 0).getDate();
+  var monthHolidays = [];
+
+  for(var ei=0; ei<firstDay; ei++){
+    var emp = document.createElement('div');
+    emp.className = 'cal-day empty';
+    grid.appendChild(emp);
+  }
+
+  for(var day=1; day<=daysInMonth; day++){
+    (function(d){
+      var date = new Date(year, month, d);
+      var holName = getHolidayName(date);
+      var wk = isWeekend(date);
+      var isToday = date.toDateString() === today.toDateString();
+      var isSel = selectedDate && date.toDateString() === selectedDate.toDateString();
+
+      var cls = 'cal-day';
+      if(wk) cls += ' weekend';
+      if(holName){ cls += ' holiday'; monthHolidays.push({d:d, name:holName}); }
+      if(isToday) cls += ' today';
+      if(isSel) cls += ' selected';
+
+      var cell = document.createElement('div');
+      cell.className = cls;
+      cell.textContent = d;
+      if(holName) cell.title = holName;
+
+      cell.onclick = function(e){
+        e.stopPropagation();
+        var chosen = new Date(year, month, d);
+        document.getElementById(id+'_startHidden').value = dateKey(chosen);
+        var trigger = document.getElementById(id+'_trigger');
+        trigger.querySelector('.dt-val').textContent = fmt(chosen)+' — '+dayName(chosen);
+        trigger.querySelector('.dt-val').style.color = '';
+        closeCalendar(id);
+        saveAll();
+      };
+      grid.appendChild(cell);
+    })(day);
+  }
+
+  popup.appendChild(grid);
+
+  var leg = document.createElement('div');
+  leg.className = 'hol-legend';
+  leg.innerHTML = '<div class="hol-item"><div class="hol-dot" style="background:#dc2626"></div> ???? ???????</div><div class="hol-item"><div class="hol-dot" style="background:#d97706"></div> ??? ????</div>';
+  popup.appendChild(leg);
+
+  if(monthHolidays.length){
+    var mhl = document.createElement('div');
+    mhl.className = 'month-holidays';
+    for(var i=0; i<monthHolidays.length; i++){
+      var item = document.createElement('div');
+      item.className = 'mh-item';
+      item.innerHTML = '<span class="mh-day">'+monthHolidays[i].d+'</span>'+monthHolidays[i].name;
+      mhl.appendChild(item);
+    }
+    popup.appendChild(mhl);
+  }
+}
+
+function openCalendar(id) {
+  if(openCalId && openCalId !== id) closeCalendar(openCalId);
+  var popup = document.getElementById(id+'_cal');
+  var trigger = document.getElementById(id+'_trigger');
+  var today = new Date();
+  var selVal = document.getElementById(id+'_startHidden').value;
+  var base = selVal ? new Date(selVal+'T00:00:00') : today;
+  buildCalendar(id, base.getFullYear(), base.getMonth());
+  popup.classList.add('open');
+  trigger.classList.add('open');
+  openCalId = id;
+}
+
+function closeCalendar(id) {
+  var popup = document.getElementById(id+'_cal');
+  var trigger = document.getElementById(id+'_trigger');
+  if(popup) popup.classList.remove('open');
+  if(trigger) trigger.classList.remove('open');
+  if(openCalId === id) openCalId = null;
+}
+
+document.addEventListener('click', function(){
+  if(openCalId) closeCalendar(openCalId);
+});
+
+// ---- ADD PERSON ----
+function addPerson() {
+  personCount++;
+  var id = 'p'+personCount;
+  var num = personCount;
+  var div = document.createElement('div');
+  div.className = 'person-card';
+  div.id = id;
+  div.innerHTML =
+    '<div class="person-header">'+
+      '<div class="person-num">'+num+'</div>'+
+      '<div class="person-title" id="'+id+'_title">???? '+num+'</div>'+
+      '<button class="remove-btn" onclick="removePerson(\''+id+'\')" title="???">&#10005;</button>'+
+    '</div>'+
+    '<div class="form-grid">'+
+      '<div class="field full">'+
+        '<label>??? ?????? (???????)</label>'+
+        '<input type="text" id="'+id+'_name" placeholder="????: ???? ?? ???" oninput="onNameInput(\''+id+'\',this.value)">'+
+      '</div>'+
+    '</div>'+
+    '<div class="section-sep">&#128197; ?????? ???????</div>'+
+    '<div class="form-grid">'+
+      '<div class="field">'+
+        '<label>????? ????? ?????? <span>*</span></label>'+
+        '<input type="hidden" id="'+id+'_startHidden">'+
+        '<div class="cal-wrap">'+
+          '<div class="date-trigger" id="'+id+'_trigger" onclick="openCalendar(\''+id+'\');event.stopPropagation();">'+
+            '<span class="dt-val" style="color:#94a3b8;">???? ???????</span>'+
+            '<span class="dt-ico">&#128197;</span>'+
+          '</div>'+
+          '<div class="cal-popup" id="'+id+'_cal" onclick="event.stopPropagation()"></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="field">'+
+        '<label>??? ?????? (????) <span>*</span></label>'+
+        '<input type="number" id="'+id+'_dur" placeholder="????: 15" min="1" max="365" oninput="saveAll()">'+
+      '</div>'+
+    '</div>'+
+    '<div class="section-sep">&#128194; ???? ??????? ???????</div>'+
+    '<div class="form-grid">'+
+      '<div class="field full">'+
+        '<label>???? ?????? ?? ??????? ???????</label>'+
+        '<input type="number" id="'+id+'_prev" placeholder="0" min="0" max="180" value="0" oninput="saveAll()">'+
+        '<span class="hint">???? ??? ???? ????? ??????? (30 + ??? ??????)</span>'+
+      '</div>'+
+    '</div>'+
+    '<button class="calc-btn" onclick="calculate(\''+id+'\')">&#128290; ????</button>'+
+    '<div class="error-msg" id="'+id+'_err"></div>'+
+    '<div class="result-panel" id="'+id+'_result">'+
+      '<div class="rg">'+
+        '<div class="ri"><div class="ri-lbl">&#128197; ????? ??????</div><div class="ri-val" id="'+id+'_r_start">—</div><div class="ri-sub" id="'+id+'_r_start_d">—</div></div>'+
+        '<div class="ri hl"><div class="ri-lbl">&#127937; ??? ??? ????</div><div class="ri-val" id="'+id+'_r_end">—</div><div class="ri-sub" id="'+id+'_r_end_d">—</div></div>'+
+        '<div class="ri hl full"><div class="ri-lbl">&#127970; ????? ?????? ?????</div><div class="ri-val" id="'+id+'_r_ret">—</div><div class="ri-sub" id="'+id+'_r_ret_d">—</div></div>'+
+      '</div>'+
+      '<div class="balance-block">'+
+        '<div class="balance-title">&#128202; ???? ??????</div>'+
+        '<div class="balance-grid">'+
+          '<div class="bi"><div class="bi-num" id="'+id+'_b_avail">—</div><div class="bi-lbl">?????? ??????</div></div>'+
+          '<div class="bi"><div class="bi-num warn" id="'+id+'_b_dur">—</div><div class="bi-lbl">???? ??????</div></div>'+
+          '<div class="bi"><div class="bi-num" id="'+id+'_b_rem">—</div><div class="bi-lbl">???????</div></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="progress-section">'+
+        '<div class="progress-label"><span>???? ?????????</span><span id="'+id+'_pct">0%</span></div>'+
+        '<div class="progress-bar"><div class="progress-fill" id="'+id+'_fill"></div></div>'+
+      '</div>'+
+      '<div class="warn-box" id="'+id+'_warn" style="display:none;">'+
+        '<span class="wi">&#9888;</span>'+
+        '<div class="warn-text" id="'+id+'_warn_txt"></div>'+
+      '</div>'+
+    '</div>';
+  document.getElementById('personsContainer').appendChild(div);
+}
+
+function onNameInput(id, val) {
+  document.getElementById(id+'_title').textContent = val || ('???? ' + id.replace('p',''));
+  saveAll();
+}
+
+function removePerson(id) {
+  var el = document.getElementById(id);
+  if(el) el.remove();
+  saveAll();
+  updateSummary();
+}
+
+// ---- CALCULATE ----
+function calculate(id) {
+  var startVal = document.getElementById(id+'_startHidden').value;
+  var durVal   = parseInt(document.getElementById(id+'_dur').value) || 0;
+  var prevRem  = Math.max(0, parseInt(document.getElementById(id+'_prev').value) || 0);
+  var errEl    = document.getElementById(id+'_err');
+  var resEl    = document.getElementById(id+'_result');
+
+  if(!startVal || durVal < 1){
+    errEl.textContent = '?????? ?????? ????? ??????? ?????? ??? ??????';
+    errEl.classList.add('show');
+    resEl.classList.remove('show');
+    return;
+  }
+  var totalAvail = ANNUAL + prevRem;
+  if(durVal > totalAvail){
+    errEl.textContent = '??? ?????? ('+durVal+' ???) ?????? ?????? ?????? ('+totalAvail+' ???)';
+    errEl.classList.add('show');
+    resEl.classList.remove('show');
+    return;
+  }
+  errEl.classList.remove('show');
+
+  var startDate   = new Date(startVal+'T00:00:00');
+  var endDate     = addD(startDate, durVal-1);
+  var returnDate  = nextDay(endDate);
+  var actualReturn= actualReturnDay(endDate);
+  var finalRem    = totalAvail - durVal;
+
+  document.getElementById(id+'_r_start').textContent   = fmt(startDate);
+  document.getElementById(id+'_r_start_d').textContent = dayName(startDate);
+  document.getElementById(id+'_r_end').textContent     = fmt(endDate);
+  document.getElementById(id+'_r_end_d').textContent   = dayName(endDate);
+  document.getElementById(id+'_r_ret').textContent     = fmt(returnDate);
+  document.getElementById(id+'_r_ret_d').textContent   = dayName(returnDate);
+
+  document.getElementById(id+'_b_avail').textContent = totalAvail;
+  document.getElementById(id+'_b_dur').textContent   = durVal;
+  document.getElementById(id+'_b_rem').textContent   = finalRem;
+
+  var remEl = document.getElementById(id+'_b_rem');
+  remEl.classList.remove('warn','bad');
+  if(finalRem < 0) remEl.classList.add('bad');
+  else if(finalRem <= 5) remEl.classList.add('warn');
+
+  var pct  = Math.min(100, Math.round((durVal/totalAvail)*100));
+  var fill = document.getElementById(id+'_fill');
+  fill.className = 'progress-fill '+(pct>=90?'pf-red':pct>=60?'pf-yellow':'pf-green');
+  document.getElementById(id+'_pct').textContent = pct+'%';
+
+  var warns = [];
+  var retHol = getHolidayName(returnDate);
+  var retWk  = isWeekend(returnDate);
+  if(retWk || retHol){
+    var reason = retWk
+      ? '??? '+dayName(returnDate)+' ??? ??? ???? ???????'
+      : '??? '+dayName(returnDate)+' ??? ??? ???? ('+retHol+')';
+    warns.push('????? ?????? ?????? ('+fmt(returnDate)+') ???? '+reason+' — ??? ??? ??? ????: '+dayName(actualReturn)+' '+fmt(actualReturn)+'.');
+  }
+  if(finalRem >= 0 && finalRem <= 5) warns.push('?????: ?? ???? ??? '+finalRem+' ??? ?? ??????.');
+  if(prevRem > 0) warns.push('?? ?????? '+prevRem+' ??? ?????? ?? ??????? ??????? ??? ?????? ('+totalAvail+' ???).');
+
+  var holsInRange = [];
+  for(var i=0; i<durVal; i++){
+    var d = addD(startDate, i);
+    var h = getHolidayName(d);
+    if(h && !isWeekend(d)) holsInRange.push(fmt(d)+' ('+h+')');
+  }
+  if(holsInRange.length) warns.push('????? ????? ???? ??????: '+holsInRange.join(' | ')+'.');
+
+  var warnBox = document.getElementById(id+'_warn');
+  if(warns.length){
+    warnBox.style.display = 'flex';
+    document.getElementById(id+'_warn_txt').innerHTML = warns.join('<br>');
+  } else {
+    warnBox.style.display = 'none';
+  }
+
+  document.getElementById(id).classList.add('has-result');
+  resEl.classList.remove('show');
+  void resEl.offsetWidth;
+  resEl.classList.add('show');
+  setTimeout(function(){ fill.style.width = pct+'%'; }, 120);
+
+  saveAll();
+  showToast('&#128190; ?? ????? ????????', 'blue');
+  updateSummary();
+}
+
+// ---- SUMMARY ----
+function updateSummary() {
+  var bar    = document.getElementById('summaryBar');
+  var grid   = document.getElementById('summaryGrid');
+  var cards  = document.querySelectorAll('.person-card');
+  var results = [];
+  cards.forEach(function(card){
+    var id = card.id;
+    var resEl = document.getElementById(id+'_result');
+    if(!resEl || !resEl.classList.contains('show')) return;
+    var name   = document.getElementById(id+'_name').value.trim() || card.querySelector('.person-title').textContent;
+    var remain = parseInt(document.getElementById(id+'_b_rem').textContent);
+    results.push({name:name, remain:remain});
+  });
+  if(!results.length){ bar.classList.remove('show'); return; }
+  bar.classList.add('show');
+  grid.innerHTML = results.map(function(r){
+    var cls = r.remain < 0 ? 'over' : r.remain <= 5 ? 'low' : 'ok';
+    return '<div class="sum-item"><div class="sum-name">'+r.name+'</div><div class="sum-remain '+cls+'">'+r.remain+'</div><div class="sum-lbl">??? ?????</div></div>';
+  }).join('');
+}
+
+// ---- LOCAL STORAGE ----
+function saveAll() {
+  var cards = document.querySelectorAll('.person-card');
+  var data = [];
+  cards.forEach(function(card){
+    var id = card.id;
+    data.push({
+      id: id,
+      name:      (document.getElementById(id+'_name')||{}).value || '',
+      start:     (document.getElementById(id+'_startHidden')||{}).value || '',
+      dur:       (document.getElementById(id+'_dur')||{}).value || '',
+      prev:      (document.getElementById(id+'_prev')||{}).value || '0',
+      hasResult: document.getElementById(id+'_result').classList.contains('show')
+    });
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({persons:data, savedAt:Date.now()}));
+}
+
+function loadSaved() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    var saved = JSON.parse(raw);
+    if(!saved || !saved.persons || !saved.persons.length) return;
+    var mins = Math.round((Date.now() - saved.savedAt) / 60000);
+    var timeLabel = mins < 60 ? '??? '+mins+' ?????' : '??? '+Math.round(mins/60)+' ????';
+    var bar = document.getElementById('restoreBar');
+    document.getElementById('restoreText').textContent = '?? ?????? ??? '+saved.persons.length+' ???? ????? ('+timeLabel+')';
+    bar.classList.add('show');
+    bar._data = saved.persons;
+  } catch(e) {}
+}
+
+function restoreData() {
+  var bar = document.getElementById('restoreBar');
+  var persons = bar._data || [];
+  document.getElementById('personsContainer').innerHTML = '';
+  personCount = 0;
+  persons.forEach(function(p){
+    addPerson();
+    var id = 'p'+personCount;
+    if(p.name){
+      document.getElementById(id+'_name').value = p.name;
+      document.getElementById(id+'_title').textContent = p.name;
+    }
+    if(p.start){
+      document.getElementById(id+'_startHidden').value = p.start;
+      var d = new Date(p.start+'T00:00:00');
+      var tv = document.getElementById(id+'_trigger').querySelector('.dt-val');
+      tv.textContent = fmt(d)+' — '+dayName(d);
+      tv.style.color = '';
+    }
+    if(p.dur)  document.getElementById(id+'_dur').value  = p.dur;
+    if(p.prev) document.getElementById(id+'_prev').value = p.prev;
+    if(p.hasResult){ (function(pid){ setTimeout(function(){ calculate(pid); }, 150); })(id); }
+  });
+  bar.classList.remove('show');
+  showToast('&#10003; ?? ??????? ????????', 'green');
+}
+
+function dismissRestore() {
+  document.getElementById('restoreBar').classList.remove('show');
+}
+
+// ---- PDF EXPORT ----
+function exportPDF() {
+  var cards = document.querySelectorAll('.person-card');
+  var results = [];
+  cards.forEach(function(card){
+    var id = card.id;
+    var resEl = document.getElementById(id+'_result');
+    if(!resEl || !resEl.classList.contains('show')) return;
+    results.push({
+      name:   document.getElementById(id+'_name').value.trim() || card.querySelector('.person-title').textContent,
+      start:  document.getElementById(id+'_r_start').textContent,
+      startD: document.getElementById(id+'_r_start_d').textContent,
+      end:    document.getElementById(id+'_r_end').textContent,
+      endD:   document.getElementById(id+'_r_end_d').textContent,
+      ret:    document.getElementById(id+'_r_ret').textContent,
+      retD:   document.getElementById(id+'_r_ret_d').textContent,
+      avail:  document.getElementById(id+'_b_avail').textContent,
+      dur:    document.getElementById(id+'_b_dur').textContent,
+      remain: document.getElementById(id+'_b_rem').textContent,
+      warns:  (document.getElementById(id+'_warn_txt')||{innerHTML:''}).innerHTML.replace(/<br>/g,' | ')
+    });
+  });
+  if(!results.length){ showToast('&#9888; ?? ???? ????? ???????'); return; }
+
+  var today = new Date();
+  var todayStr = fmt(today);
+  var html = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">';
+  html += '<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@700;900&display=swap" rel="stylesheet">';
+  html += '<style>';
+  html += 'body{font-family:Cairo,Tajawal,Arial,sans-serif;direction:rtl;padding:20px;background:#fff;color:#1e293b;margin:0;}';
+  html += '.head{text-align:center;border-bottom:3px solid #1d4ed8;padding-bottom:14px;margin-bottom:18px;}';
+  html += '.head h1{font-size:22pt;font-weight:900;color:#1d4ed8;margin:0 0 4px;}';
+  html += '.head p{font-size:10pt;color:#64748b;margin:2px 0;}';
+  html += '.card{border:1px solid #e2e8f0;border-radius:10px;margin-bottom:16px;overflow:hidden;page-break-inside:avoid;}';
+  html += '.card-head{background:#1d4ed8;color:#fff;padding:10px 16px;font-size:14pt;font-weight:900;}';
+  html += '.card-body{padding:14px 16px;}';
+  html += 'table{width:100%;border-collapse:collapse;margin-bottom:12px;}';
+  html += 'td{padding:7px 8px;font-size:11pt;}';
+  html += '.lbl{color:#64748b;width:36%;}';
+  html += '.val{font-weight:700;}';
+  html += '.bg{background:#f8fafc;}';
+  html += '.boxes{display:flex;gap:10px;margin-bottom:10px;}';
+  html += '.box{flex:1;border-radius:8px;padding:10px;text-align:center;}';
+  html += '.box .num{font-size:18pt;font-weight:900;}';
+  html += '.box .lbl2{font-size:9pt;color:#64748b;}';
+  html += '.b1{background:#f0f9ff;border:1px solid #bae6fd;} .b1 .num{color:#0284c7;}';
+  html += '.b2{background:#fff7ed;border:1px solid #fed7aa;} .b2 .num{color:#ea580c;}';
+  html += '.b3{background:#f0fdf4;border:1px solid #bbf7d0;}';
+  html += '.warn-box{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:9.5pt;color:#92400e;margin-top:8px;}';
+  html += '.sum-table{width:100%;border-collapse:collapse;font-size:10pt;}';
+  html += '.sum-table th{background:#eff6ff;color:#1d4ed8;padding:8px;text-align:right;}';
+  html += '.sum-table td{padding:7px 8px;border-bottom:1px solid #f1f5f9;}';
+  html += '.footer{text-align:center;font-size:9pt;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px;margin-top:16px;}';
+  html += '@media print{body{padding:10px;}}';
+  html += '</style></head><body>';
+  html += '<div class="head"><h1>????? ????? ???????</h1>';
+  html += '<p>??? ????? ?????? — '+todayStr+'</p>';
+  html += '<p style="color:#94a3b8;">kerboub brahim</p></div>';
+
+  for(var i=0;i<results.length;i++){
+    var r=results[i];
+    var remC=parseInt(r.remain)<0?'#ef4444':parseInt(r.remain)<=5?'#f59e0b':'#10b981';
+    html+='<div class="card">';
+    html+='<div class="card-head">'+(i+1)+'. '+r.name+'</div>';
+    html+='<div class="card-body">';
+    html+='<table>';
+    html+='<tr><td class="lbl">????? ??????</td><td class="val">'+r.start+' — '+r.startD+'</td></tr>';
+    html+='<tr class="bg"><td class="lbl">??? ??? ????</td><td class="val">'+r.end+' — '+r.endD+'</td></tr>';
+    html+='<tr><td class="lbl">????? ??????</td><td class="val" style="color:#1d4ed8;">'+r.ret+' — '+r.retD+'</td></tr>';
+    html+='</table>';
+    html+='<div class="boxes">';
+    html+='<div class="box b1"><div class="num">'+r.avail+'</div><div class="lbl2">?????? ??????</div></div>';
+    html+='<div class="box b2"><div class="num">'+r.dur+'</div><div class="lbl2">???? ??????</div></div>';
+    html+='<div class="box b3"><div class="num" style="color:'+remC+';">'+r.remain+'</div><div class="lbl2">???????</div></div>';
+    html+='</div>';
+    if(r.warns) html+='<div class="warn-box">&#9888; '+r.warns+'</div>';
+    html+='</div></div>';
+  }
+
+  if(results.length>1){
+    html+='<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-top:10px;">';
+    html+='<div style="background:#f8fafc;padding:10px 14px;font-weight:900;font-size:12pt;border-bottom:1px solid #e2e8f0;">???? ???? ????????</div>';
+    html+='<table class="sum-table"><tr><th>??????</th><th style="text-align:center;">????? ??????</th><th style="text-align:center;">?????</th><th style="text-align:center;">???????</th></tr>';
+    for(var j=0;j<results.length;j++){
+      var rj=results[j];
+      var rc=parseInt(rj.remain)<0?'#ef4444':parseInt(rj.remain)<=5?'#f59e0b':'#10b981';
+      html+='<tr style="'+(j%2?'background:#f8fafc':'')+'">';
+      html+='<td style="font-weight:700;">'+rj.name+'</td>';
+      html+='<td style="text-align:center;">'+rj.start+'</td>';
+      html+='<td style="text-align:center;">'+rj.dur+' ???</td>';
+      html+='<td style="text-align:center;font-weight:900;color:'+rc+';">'+rj.remain+'</td>';
+      html+='</tr>';
+    }
+    html+='</table></div>';
+  }
+
+  html+='<div class="footer">?? ????? ??? ????? ?????? ????? ????? ??????? — kerboub brahim</div>';
+  html+='<script>window.onload=function(){window.print();}<\/script>';
+  html+='</body></html>';
+
+  // Open in new iframe and print
+  var iframe = document.getElementById('pdfFrame');
+  if(!iframe){
+    iframe = document.createElement('iframe');
+    iframe.id = 'pdfFrame';
+    iframe.style.cssText = 'position:fixed;top:-9999px;left:0;width:1px;height:1px;border:none;';
+    document.body.appendChild(iframe);
+  }
+  var iDoc = iframe.contentWindow.document;
+  iDoc.open(); iDoc.write(html); iDoc.close();
+  setTimeout(function(){
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    showToast('&#10003; ???? ??? ????? ??????? / ??? PDF','green');
+  }, 600);
+}
+
+// ---- INIT ----
+window.addEventListener('load', loadSaved);
+addPerson();
+</script>
+</body>
+</html>
