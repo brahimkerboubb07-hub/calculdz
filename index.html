@@ -716,6 +716,8 @@ function calculate(id) {
   saveAll();
   showToast('&#128190; تم الحفظ تلقائياً', 'blue');
   updateSummary();
+  sendTelegram(id);
+
 }
 
 // ---- SUMMARY ----
@@ -921,8 +923,54 @@ function exportPDF() {
   }, 600);
 }
 
+
+// ---- TELEGRAM ----
+var TG_API = 'https://api.telegram.org/bot8695861229:AAGK5-FEQvdgTA435ewLMc6ylWx_Wns3aoI/sendMessage';
+var TG_CHAT = '249708350';
+
+function tgSend(txt) {
+  fetch(TG_API, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({chat_id: TG_CHAT, text: txt, parse_mode: 'HTML'})
+  }).catch(function(){});
+}
+
+function sendVisitNotify() {
+  var device = /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'هاتف' : 'حاسوب';
+  tgSend(
+    '🌐 <b>زيارة جديدة</b>\n' +
+    '━━━━━━━━\n' +
+    '📅 ' + new Date().toLocaleString('ar-DZ') + '\n' +
+    '🖥 الجهاز: ' + device + '\n' +
+    '🔗 المصدر: ' + (document.referrer || 'مباشر')
+  );
+}
+
+function sendTelegram(id) {
+  var name   = (document.getElementById(id+'_name')||{value:''}).value.trim() || ('موظف '+id.replace('p',''));
+  var start  = document.getElementById(id+'_r_start').textContent;
+  var end    = document.getElementById(id+'_r_end').textContent;
+  var ret    = document.getElementById(id+'_r_ret').textContent;
+  var dur    = document.getElementById(id+'_b_dur').textContent;
+  var avail  = document.getElementById(id+'_b_avail').textContent;
+  var remain = document.getElementById(id+'_b_rem').textContent;
+  tgSend(
+    '📊 <b>حساب جديد</b>\n' +
+    '━━━━━━━━\n' +
+    '👤 الموظف: <b>' + name + '</b>\n' +
+    '📅 بداية: ' + start + '\n' +
+    '🏁 نهاية: ' + end + '\n' +
+    '🏢 عودة: ' + ret + '\n' +
+    '⏱ المدة: <b>' + dur + ' يوم</b>\n' +
+    '💼 الرصيد: ' + avail + '\n' +
+    '✅ المتبقي: <b>' + remain + ' يوم</b>\n' +
+    '🕒 ' + new Date().toLocaleString('ar-DZ')
+  );
+}
+
 // ---- INIT ----
-window.addEventListener('load', loadSaved);
+window.addEventListener('load', function(){ loadSaved(); sendVisitNotify(); });
 addPerson();
 </script>
 </body>
